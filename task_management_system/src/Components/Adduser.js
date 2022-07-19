@@ -1,6 +1,5 @@
 import React from "react";
- 
-const AddUSer = () => {
+const AddUser = () => {
     return(
         <div>
             <div className = "user-header">
@@ -10,10 +9,10 @@ const AddUSer = () => {
                 </div>
             </div>
             <div className = "user-table">
-
             </div>
         </div>
+        
 
     );
 }
-export default AddUSer
+export default AddUser;
