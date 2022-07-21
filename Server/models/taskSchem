@@ -1,0 +1,47 @@
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types;
+
+const taskSchema = new mongoose.Schema({
+
+    // TITLE
+    title:{
+        type: String,
+        required: [true, "Please mention the title"]
+    },
+
+    desccription: {
+        type: String,
+    },
+    task_type:{
+        type: String,
+        enum: {
+            values: [
+                "easy",
+                "moderate",
+                "difficult"
+            ],
+            message: "select the type of task",
+        },
+        required: [true, "please select the task type"]
+        },
+    task_status:{
+        type: String,
+        enum: {
+            values: [
+                "assigned",
+                "ongoing",
+                "completed"
+            ],
+            message: "Please select the task status",
+        },
+        required: [true, "please select the task-status"] 
+       }, 
+
+    // REFERENCES TO THE USER MODEL 
+       user:{
+        type: ObjectId,
+        ref: "User",
+        required: true,
+      },
+
+    })
