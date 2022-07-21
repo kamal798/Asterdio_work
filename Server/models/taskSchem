@@ -9,8 +9,12 @@ const taskSchema = new mongoose.Schema({
         required: [true, "Please mention the title"]
     },
 
-    desccription: {
+    description: {
         type: String,
+    },
+    date:{
+        type: String,
+        required: [true, "please choose the date"]
     },
     task_type:{
         type: String,
@@ -43,5 +47,10 @@ const taskSchema = new mongoose.Schema({
         ref: "User",
         required: true,
       },
+    },
+    {timestamps: true}
 
-    })
+    );
+
+    const task = new mongoose.model("Task", taskSchema);
+    module.exports = task;
