@@ -17,34 +17,38 @@ const userSchema = new mongoose.Schema({
     email:{
             type: String,
             required:[true, "Enter the email address"],
-            unique: [true, "Please enter the new email"]
+            unique: [true, "Please enter the new email"],
+            match: [
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter the valid email address'
+              ]
+          
+        },
+    password:{
+            type: String,
+            required: [true, 'password is required'],
+            select: false
         },
 
         //AGE
-    age:{
-            type: String,
+    number:{
+            type: Number,
             required:[true, "Please enter the age"]
         },
   
         //PHONE NUMBER
-    number:{
+    phone:{
             type: Number,
             required:[true,"Please add the phone number"],
             unique: [true, "Add the new numer that is not mentioned preciously"]
         },
 
-        //ROLE
-        role: {
-            type: ObjectId,
-            ref: "Role",
-            //This above reference means take reference from the role_id of Role.js Model
-            //Thus create RoleController.js before Creating UserController.js
-          },
+    role: {
+            type: String,
+            enum: ["frontend", "backend", "designer", "QA"]
+          }
 
 },
 {timestamp: true}  // IT SET THE "CREATED AT AND UPDATED AT" AUTOMATICALLY
 );
 
-const users = new mongoose.model("Users",userSchema);
-
-module.exports = users;
+module.exports=  mongoose.model("Users",userSchema);
