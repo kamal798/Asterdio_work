@@ -5,16 +5,20 @@ const mongoose = require("mongoose");
 require("./db/conn");
 const users = require("./models/userSchema");
 const cors = require("cors");
-const router = require("./routes/router");
+const userRoutes = require("./routes/UserRoutes");
+//console.log(new mongoose.Types.ObjectId())
 
 
-const port = 8003;
+
+const PORT = 8003;
 
 app.use(cors());
 app.use(express.json());
+app.use(userRoutes);
 
-app.use(router);
+app.use('/users', userRoutes);
 
-app.listen(port, () => {
-    console.log('server is starting on port number %d', port);
+
+app.listen(PORT, () => {
+    console.log('server is starting on port number %d', PORT);
 });
