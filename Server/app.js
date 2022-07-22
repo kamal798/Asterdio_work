@@ -13,8 +13,11 @@ const userRoutes = require("./routes/UserRoutes");
 const PORT = 8003;
 
 app.use(cors());
+
 app.use(express.json());
 app.use(userRoutes);
+
+app.use(express.urlencoded({ extended: false }));
 
 app.use('/users', userRoutes);
 

@@ -17,11 +17,11 @@ const userSchema = new mongoose.Schema({
     email:{
             type: String,
             required:[true, "Enter the email address"],
-            unique: [true, "Please enter the new email"],
-            match: [
+          //  unique: [true, "Please enter the new email"],
+          /*  match: [
                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter the valid email address'
               ]
-          
+          */
         },
     password:{
             type: String,
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
     phone:{
             type: Number,
             required:[true,"Please add the phone number"],
-            unique: [true, "Add the new numer that is not mentioned preciously"]
+          //  unique: [true, "Add the new numer that is not mentioned preciously"]
         },
 
     role: {

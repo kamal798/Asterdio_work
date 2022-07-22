@@ -1,5 +1,6 @@
 const Joi = require('joi');
-const _ = require('lodash')
+const _ = require('lodash');
+
 
 const User = require('../models/userSchema')
 
@@ -31,9 +32,53 @@ module.exports.deleteUser = async(req,res)=>{
 }
 
 // TO REGISTER THE NEW USER
+module.exports.registerUser = async(req, res) => {
+  // try{
+  console.log(req.body);
+   const { error } = userDataValidation(req.body);
+    //JOI VALIDATES ONE AT A TIME
+    //HENCE, IF WE DO:
+    // return res.status(400).json({ status: false , msg: error.message }); -> ONE ERROR at a time
+  
+    if (error) {
+      // return res.status(400).json({ status: false , msg: error.message });
+      return res.status(400).json({ status: false, msg: error });
+    }
+    const user = await User.create(
+      _.pick(req.body, [
+        "name",
+        "email",
+        "password",
+        "number",
+        "phone",
+        "role"
+      ])
+    );
+    return res.json({ status: true, msg: "New user created successfully", user });
+    // }
+    // catch(error){
+    // res.status(400).json({ status: false, msg: error });
+    // }*/
+  };
+
+
+  const userDataValidation = (datas) => {
+    const schema = Joi.object({
+      name: Joi.string().required(),
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+      number: Joi.number().required(),
+      phone: Joi.number().required(),
+      role: Joi.string().required()
+    });
+  
+    return schema.validate(datas);
+  };
+  
+
 /*
 module.exports.registerUser = async(req,res)=>{
-    //console.log(req.body);
+    console.log(req.body);
     const {name, email,password, age, role, number} = req.body;
 
     if(!name || !email || !password || !age || !role || !number){
