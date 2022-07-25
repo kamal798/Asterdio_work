@@ -31,6 +31,25 @@ module.exports.deleteUser = async(req,res)=>{
     return res.json({status: true, msg:"User deleted successfully"});
 }
 
+
+//TO UPDATE USER BY USER_ID
+module.exports.updateUser = async(req,res) => {
+  const user = await User.findById(req.params.id);
+  if(!user)
+    return res.status(404).json({status: false, msg:"No user found"});
+
+  // CHECK EMAIL IS ALREADY USED OR NOT
+  if(req.body.email){
+    const checkEmail = await User.findOne({email: req.body.email});
+    if(checkEmail && checkEmail.id != user.id)
+      return res.status(404).json({status:false, msg: "Email not available"});
+
+  }
+  user.set(req.body);
+  await user.save();
+  return res.json({status:true, msg: "User updated successfully", user});
+}
+
 // TO REGISTER THE NEW USER
 module.exports.registerUser = async(req, res) => {
   // try{

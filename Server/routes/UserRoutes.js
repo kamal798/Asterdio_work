@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 
-const {getAll, registerUser, getOne, deleteUser} = require('../controller/UserController')
+const {getAll, registerUser, getOne, deleteUser, updateUser} = require('../controller/UserController')
 
 // TO GET ALL USERS
 router.get('/users', getAll);
@@ -18,5 +18,8 @@ router.post('/register', registerUser);
 
 //TO DELETE THE USER BY USER_ID
 router.delete('/delete/:id',deleteUser);
+
+//TO UPDATE BY USER_ID
+router.put('/:id', updateUser );
 
 module.exports = router;
