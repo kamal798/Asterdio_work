@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 
-const {getAll, registerUser, getOne, deleteUser, updateUser} = require('../controller/UserController')
+const {getAll, registerUser, getOne, deleteUser, updateUser, login} = require('../../controller/UserController')
 
 // TO GET ALL USERS
 router.get('/users', getAll);
@@ -12,6 +12,9 @@ router.get('/users', getAll);
 
 //TO GET ONE USER
 router.get('/:id',getOne);
+
+// TO ADD NEW USER
+router.post('/login', login);
 
 //TO ADD NEW USER
 router.post('/register', registerUser);

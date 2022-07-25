@@ -13,7 +13,6 @@ module.exports.getAll = async(req, res)=>{
     return res.status(404).json({status: false, msg: "No User Found"});
 };
 
-
 //TO GET USER BY ID
 module.exports.getOne = async(req, res)=>{
     const user = await User.findById(req.params.id);
@@ -22,6 +21,22 @@ module.exports.getOne = async(req, res)=>{
     return res.status(404).json({status: false, msg: "User not found"});
 }
 
+// TO LOGIN USER
+module.exports.login = async(req, res) => {
+  const {email, password} = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ status: false, msg: "Enter both email and password" });
+  }
+  const user = await User.findOne({email}).select('+password');
+  if (!user)
+    return res.status(404).json({status: false, msg: 'invalid email' });
+  const valid = await user.comparePassword(password);
+  console.log(valid)
+  if (!valid)
+    return res.status(400).json({ status: false, msg: 'Invalid Password' });
+  return res.status(200).json({status:true,msg:'login sucessful', user})
+
+}
 
 //TO DELETE THE USER BY USER_ID
 module.exports.deleteUser = async(req,res)=>{
@@ -91,9 +106,9 @@ module.exports.registerUser = async(req, res) => {
       role: Joi.string().required()
     });
   
+  
     return schema.validate(datas);
   };
-  
 
 /*
 module.exports.registerUser = async(req,res)=>{
@@ -120,4 +135,5 @@ module.exports.registerUser = async(req,res)=>{
     }catch(error){
         res.status(404).send(error);
     }
-}*/
+}
+*/

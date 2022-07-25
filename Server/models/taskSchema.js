@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { ObjectId } = mongoose.Schema.Types;
 
 const taskSchema = new mongoose.Schema({
 
@@ -42,15 +41,15 @@ const taskSchema = new mongoose.Schema({
        }, 
 
     // REFERENCES TO THE USER MODEL 
+    /*
        user:{
         type: ObjectId,
         ref: "User",
         required: true,
-      },
+      },*/
     },
     {timestamps: true}
 
     );
 
-    const task = new mongoose.model("Task", taskSchema);
-    module.exports = task;
+module.exports=  mongoose.model("Tasks",taskSchema);
