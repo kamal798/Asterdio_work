@@ -13,7 +13,7 @@ router.get('/users', getAll);
 //TO GET ONE USER
 router.get('/:id',getOne);
 
-// TO ADD NEW USER
+// TO Login
 router.post('/login', login);
 
 //TO ADD NEW USER

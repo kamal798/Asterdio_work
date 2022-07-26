@@ -8,5 +8,17 @@ const {getAll, getOne, addNew, deleteTask, updateTask} = require('../../controll
 // TO GET ALL TASKS
 router.get('/tasks', getAll);
 
+//TO GET TASK BY ID
+router.get('/:id', getOne);
+
+//TO ADD NEW TASK 
+router.post('/addtask', addNew);
+
+//TO DELETE TASKS
+router.delete('/delete/:id', deleteTask);
+
+//TO UPDATE TASKS
+router.put("/update/:id", updateTask);
+
 
 module.exports = router;

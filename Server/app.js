@@ -1,9 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const app =  express();
-const mongoose = require("mongoose");
 require("./db/conn");
-const users = require("./models/userSchema");
 const cors = require("cors");
 
 
@@ -24,8 +22,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //ROUTING
-app.use('/', userRoutes)
-app.use('/', taskRoutes);
+app.use('/user', userRoutes)
+app.use('/task', taskRoutes);
 
 app.listen(PORT, () => {
     console.log('server is starting on port number %d', PORT);

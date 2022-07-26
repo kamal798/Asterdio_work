@@ -40,13 +40,11 @@ const taskSchema = new mongoose.Schema({
         required: [true, "please select the task-status"] 
        }, 
 
-    // REFERENCES TO THE USER MODEL 
-    /*
-       user:{
-        type: ObjectId,
-        ref: "User",
-        required: true,
-      },*/
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: [true, 'User is required :(']
+      }
     },
     {timestamps: true}
 

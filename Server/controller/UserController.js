@@ -56,6 +56,7 @@ module.exports.updateUser = async(req,res) => {
   // CHECK EMAIL IS ALREADY USED OR NOT
   if(req.body.email){
     const checkEmail = await User.findOne({email: req.body.email});
+
     if(checkEmail && checkEmail.id != user.id)
       return res.status(404).json({status:false, msg: "Email not available"});
 
