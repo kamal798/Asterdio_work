@@ -2,7 +2,7 @@ const Joi = require('joi');
 const _ = require('lodash');
 
 const Task = require('../models/taskSchema');
-
+const User = require('../models/userSchema');
 
 module.exports.getAll = async(req,res) => {
     const tasks = await Task.find();
@@ -24,35 +24,45 @@ module.exports.addNew = async(req,res) => {
     if(error){
         return res.status(404).json({status: false, msg: error});
     }
-    const task = await Task.create(
-        _.pick(req.body, [
+    const data = _.pick(req.body, [
             "title",
             "description",
             "date",
             "task_type",
             "task_status",
             "user"
-        ])
-    );
-    return res.json({status: true, msg: "Task created successfully", task});
+        ]);
+    const userID = data.user;
+    const user = await User.findById(userID);
+    if(user){
+        const task = await Task.create(data);
+        return res.json({status: true, msg: "Task created successfully", task});
+    }
+    return res.status(404).json({status: false, msg: "User not found"});
+    
 };
 
 
 module.exports.deleteTask = async(req,res) => {
     const task = await Task.findById(req.params.id);
     if(task){
-        if(req.user.role == "admin"){
-            await task.remove();
-            return res.json({status: true, msg: "Task deleted successfully"});
-        }
-        return res.status(404).json({status: false, msg: "No such task found"});
+        await task.remove();
+        return res.json({status: true, msg: "Task deleted successfully"});
     }
-}
+    return res.status(404).json({status: false, msg: "No such task found"});
+    }
 
 module.exports.updateTask = async(req,res) => {
     const task = await Task.findById(req.params.id);
-
+    console.log(req.body);
+    if(task){
+            task.set(req.body);
+            await task.save();
+            return res.json({status: true, msg: "Task updated sucessfully", task});
+        }
+    return res.status(404).json({status: false, msg: "No task found"});
 }
+
 
 const taskDataValidation = (datas) => {
     const schema = Joi.object({

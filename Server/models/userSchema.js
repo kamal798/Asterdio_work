@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 //  USER SCHEMA 
 
@@ -20,10 +21,9 @@ const userSchema = new mongoose.Schema({
             type: String,
             required:[true, "Enter the email address"],
           //  unique: [true, "Please enter the new email"],
-          /*  match: [
+            match: [
                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter the valid email address'
               ]
-          */
         },
     password:{
             type: String,
@@ -41,13 +41,16 @@ const userSchema = new mongoose.Schema({
     phone:{
             type: Number,
             required:[true,"Please add the phone number"],
-          //  unique: [true, "Add the new numer that is not mentioned preciously"]
+          //  unique: [true, "Add the new number that is not mentioned preciously"]
         },
 
     role: {
             type: String,
-            enum: ["frontend", "backend", "designer", "QA"]
-          }
+            enum: ["frontend", "backend", "designer", "QA", "project manager"]
+          },
+    token: {
+            type: String
+    }
 
 },
 {timestamps: true}  // IT SET THE "CREATED AT AND UPDATED AT" AUTOMATICALLY
@@ -65,5 +68,19 @@ userSchema.methods.comparePassword = async function (password) {
   console.log(data);
   return data;
 };
+userSchema.methods.getAccessToken = function () {
+  return jwt.sign({ _id: this._id, role: this.role }, process.env.PRIVATE_KEY) //{ expiresIn: process.env.TOKEN_EXPIRES })
+}
+userSchema.methods.getPasswordResetToken = async function () {
+  const resetToken = await crypto.randomBytes(20).toString('hex');
+  console.log(resetToken);
+
+  // HASH THE RESETTOKEN AND SET TO resetPasswordToken field
+  this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+  // SET EXIPIRE
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+  return resetToken;
+}
 
 module.exports=  mongoose.model("Users",userSchema);

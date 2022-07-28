@@ -1,8 +1,10 @@
 const Joi = require('joi');
 const _ = require('lodash');
+const crypto = require('crypto');
 
 
 const User = require('../models/userSchema')
+const sendMail = require('../utilis/SendMail')
 
 
 // TO GET ALL USERS
@@ -34,7 +36,18 @@ module.exports.login = async(req, res) => {
   console.log(valid)
   if (!valid)
     return res.status(400).json({ status: false, msg: 'Invalid Password' });
-  return res.status(200).json({status:true,msg:'login sucessful', user})
+  
+  const token = user.getAccessToken();
+
+  const options = {
+    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+    httpOnly: true
+  }
+
+ 
+  return res
+    .cookie('token', token, options)
+    .json({ status: true, msg: 'Login successfull :)', token });
 
 }
 
@@ -44,6 +57,40 @@ module.exports.deleteUser = async(req,res)=>{
     if(!user)
         return res.status(404).json({status: false, msg: "No user Found"});
     return res.json({status: true, msg:"User deleted successfully"});
+}
+ 
+// FORGOT PASSWORD
+module.exports.forgotPassword = async (req, res) => {
+  if (req.body && req.body.email) {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user)
+      return res.status(404).json({ status: false, msg: `${req.body.email} email not found :(` });
+
+    const resetToken = await user.getPasswordResetToken();
+
+    // SEND MAIL
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`;
+    const message = `You are receiving this email because you or someone else has requested the reset
+                      of a password. Please make a PUT request to \n\n ${resetUrl}
+                    `;
+    try {
+      await sendMail({
+        email: user.email,
+        subject: 'Password reset token',
+        message
+      });
+      await user.save();
+      return res.json({ status: true, msg: 'Please check your email :)' });
+    }
+    catch (error) {
+      console.log(error);
+      // user.resetPasswordToken = undefined;
+      // user.resetPasswordExpire = undefined;
+      // await user.save({ validateBeforeSave: false });
+      return res.status(500).json({ status: false, msg: 'Email could not be sent :(' });
+    }
+  }
+  return res.status(400).json({ status: false, msg: 'Please send your email' });
 }
 
 
@@ -79,6 +126,7 @@ module.exports.registerUser = async(req, res) => {
       // return res.status(400).json({ status: false , msg: error.message });
       return res.status(400).json({ status: false, msg: error });
     }
+    
     const user = await User.create(
       _.pick(req.body, [
         "name",
@@ -89,6 +137,7 @@ module.exports.registerUser = async(req, res) => {
         "role"
       ])
     );
+    user.token = user.getAccessToken();
     return res.json({ status: true, msg: "New user created successfully", user });
     // }
     // catch(error){
