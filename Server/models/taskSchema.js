@@ -11,9 +11,11 @@ const taskSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    date:{
+    task_start_date:{
         type: String,
-        required: [true, "please choose the date"]
+    },
+    task_end_date:{
+        type: String
     },
     task_type:{
         type: String,
@@ -40,11 +42,11 @@ const taskSchema = new mongoose.Schema({
         required: [true, "please select the task-status"] 
        }, 
 
-    /*user: {
+    user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
         required: [true, 'User is required :(']
-      }*/
+      }
     },
     {timestamps: true}
 

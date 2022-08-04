@@ -13,7 +13,7 @@ router.get('/users', authentication, authorization('project manager'), getAll);
 
 
 //TO GET ONE USER
-router.get('/:id',getOne);
+router.get('/:id', authentication, authorization('project manager'), getOne);
 
 // TO Login
 router.post('/login', login);
@@ -22,10 +22,10 @@ router.post('/login', login);
 router.post('/register', registerUser);
 
 //TO DELETE THE USER BY USER_ID
-router.delete('/delete/:id',deleteUser);
+router.delete('/delete/:id', authentication, authorization('project manager'), deleteUser);
 
 //TO UPDATE BY USER_ID
-router.put('/:id', updateUser );
+router.put('/:id', authentication, authorization('project manager'), updateUser );
 
 // TO HANDLE FORGOT PASSWORD
 router.post('/forgot-password', forgotPassword);

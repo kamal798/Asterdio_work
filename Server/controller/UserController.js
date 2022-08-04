@@ -26,6 +26,7 @@ module.exports.getOne = async(req, res)=>{
 // TO LOGIN USER
 module.exports.login = async(req, res) => {
   const {email, password} = req.body;
+  console.log(req.body);
   if (!email || !password) {
     return res.status(400).json({ status: false, msg: "Enter both email and password" });
   }
@@ -132,7 +133,7 @@ module.exports.registerUser = async(req, res) => {
         "name",
         "email",
         "password",
-        "number",
+        "mobile",
         "phone",
         "role"
       ])
@@ -151,7 +152,7 @@ module.exports.registerUser = async(req, res) => {
       name: Joi.string().required(),
       email: Joi.string().required(),
       password: Joi.string().required(),
-      number: Joi.number().required(),
+      mobile: Joi.number().required(),
       phone: Joi.number().required(),
       role: Joi.string().required()
     });

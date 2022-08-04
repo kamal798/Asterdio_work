@@ -21,7 +21,7 @@ router.delete('/delete/:id', deleteTask);
 router.put("/update/:id", updateTask);
 
 //TO GET ASSIGNED TASK
-// router.get("/assignedtask/:id", ListAssignedTask);
+router.get("/assignedtask/:id", ListAssignedTask);
 
 
 module.exports = router;

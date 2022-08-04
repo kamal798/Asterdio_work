@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
         },
 
         //AGE
-    number:{
+    mobile:{
             type: Number,
             required:[true, "Please enter the age"]
         },
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
 
     role: {
             type: String,
-            enum: ["frontend", "backend", "designer", "QA", "project manager"]
+            enum: ["Frontend Developer", "Backend Developer", "Designer", "QA"]
           },
     token: {
             type: String

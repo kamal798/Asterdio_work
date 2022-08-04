@@ -27,7 +27,6 @@ module.exports.addNew = async(req,res) => {
     const data = _.pick(req.body, [
             "title",
             "description",
-            "date",
             "task_type",
             "task_status",
             "user"
@@ -42,6 +41,20 @@ module.exports.addNew = async(req,res) => {
     
 };
 
+module.exports.ListAssignedTask = async(req,res) => {
+    const userId = req.params.id;
+    const task = await Task.find();
+    let array = Array.from(task)
+    const AssignedTasks = array.map(function(task){
+        if(task.user == userId)
+        {
+            return task;
+        }
+    })
+    return res.status(200).json({status: true, msg: "Get Successful", AssignedTasks});
+}
+
+
 
 module.exports.deleteTask = async(req,res) => {
     const task = await Task.findById(req.params.id);
@@ -54,7 +67,6 @@ module.exports.deleteTask = async(req,res) => {
 
 module.exports.updateTask = async(req,res) => {
     const task = await Task.findById(req.params.id);
-    console.log(req.body);
     if(task){
             task.set(req.body);
             await task.save();
@@ -63,12 +75,25 @@ module.exports.updateTask = async(req,res) => {
     return res.status(404).json({status: false, msg: "No task found"});
 }
 
+// module.exports.updateTaskstatus = async(req,res) => {
+//     const task = await Task.findById(req.params.id);
+//     if(task){
+//         if(task.task_status == "ongoing")
+//         {
+//             task.task_start_date = Date();
+//         }
+//         if(task.task_status == "completed")
+//         {
+//             task.task_end_date = Date();
+//         }
+//     }
+// }
+
 
 const taskDataValidation = (datas) => {
     const schema = Joi.object({
       title: Joi.string().required(),
       description: Joi.string().required(),
-      date: Joi.date().required(),
       task_type: Joi.string().required(),
       task_status: Joi.string().required(),
       user: Joi.string().required()
