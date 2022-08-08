@@ -27,7 +27,7 @@ module.exports.addNew = async(req,res) => {
     const data = _.pick(req.body, [
             "title",
             "description",
-            "task_type",
+            "priority",
             "task_status",
             "user"
         ]);
@@ -94,7 +94,7 @@ const taskDataValidation = (datas) => {
     const schema = Joi.object({
       title: Joi.string().required(),
       description: Joi.string().required(),
-      task_type: Joi.string().required(),
+      priority: Joi.string().required(),
       task_status: Joi.string().required(),
       user: Joi.string().required()
     });

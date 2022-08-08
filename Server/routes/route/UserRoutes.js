@@ -8,12 +8,10 @@ const {authentication, authorization} = require('../../middleware/auth');
 const {getAll, registerUser, getOne, deleteUser, updateUser, login, forgotPassword, } = require('../../controller/UserController')
 
 // TO GET ALL USERS
-router.get('/users', authentication, authorization('project manager'), getAll);
-
-
+router.get('/users', authentication,  getAll);
 
 //TO GET ONE USER
-router.get('/:id', authentication, authorization('project manager'), getOne);
+router.get('/:id', authentication,  getOne);
 
 // TO Login
 router.post('/login', login);
@@ -22,10 +20,10 @@ router.post('/login', login);
 router.post('/register', registerUser);
 
 //TO DELETE THE USER BY USER_ID
-router.delete('/delete/:id', authentication, authorization('project manager'), deleteUser);
+router.delete('/delete/:id', authentication, authorization('Frontend Developer'), deleteUser);
 
 //TO UPDATE BY USER_ID
-router.put('/:id', authentication, authorization('project manager'), updateUser );
+router.put('/:id', authentication, authorization('Frontend Developer'), updateUser );
 
 // TO HANDLE FORGOT PASSWORD
 router.post('/forgot-password', forgotPassword);

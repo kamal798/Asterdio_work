@@ -17,13 +17,14 @@ const taskSchema = new mongoose.Schema({
     task_end_date:{
         type: String
     },
-    task_type:{
+    priority:{
         type: String,
         enum: {
             values: [
-                "easy",
-                "moderate",
-                "difficult"
+                "Low",
+                "Medium",
+                "High",
+                "Urgent"
             ],
             message: "select the type of task",
         },
@@ -33,9 +34,9 @@ const taskSchema = new mongoose.Schema({
         type: String,
         enum: {
             values: [
-                "assigned",
-                "ongoing",
-                "completed"
+                "Pending",
+                "Ongoing",
+                "Completed"
             ],
             message: "Please select the task status",
         },

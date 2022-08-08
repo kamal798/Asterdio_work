@@ -3,7 +3,13 @@ const express = require("express");
 const app =  express();
 require("./db/conn");
 const cors = require("cors");
-
+//
+const corsOptions ={
+    origin:'http://localhost:3000', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+//
 
 const userRoutes = require("./routes/route/UserRoutes");
 const taskRoutes = require("./routes/route/TaskRoutes");
@@ -13,9 +19,11 @@ const cookieParser = require('cookie-parser');
 
 
 
-const PORT = 8003;
+const PORT = 3500;
 
-app.use(cors());
+app.use(cors(corsOptions));
+
+// app.use(cors());
 
 // FOR PARSING THE REQUEST DATA
 app.use(express.json());

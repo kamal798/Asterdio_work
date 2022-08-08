@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
 
     role: {
             type: String,
-            enum: ["Frontend Developer", "Backend Developer", "Designer", "QA"]
+            enum: ["Frontend Developer", "Backend Developer", "Designer", "QA", "Project Manager"]
           },
     token: {
             type: String

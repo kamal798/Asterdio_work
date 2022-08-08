@@ -12,11 +12,11 @@ module.exports.authentication = (req, res, next) => {
       next();
     }
     catch (err) {
-      return res.status(400).json({ status: false, msg: 'Invalid Token' });
+      return res.status(400).json({ status: false, msg: 'Invalid  Token' });
     }
   }
   else
-    return res.status(400).json({ status: false, msg: 'Please send a bearer Token' });
+    return res.status(400).json({ status: false, msg: 'Please send a bearer  Token' });
 }
 
 module.exports.authorization = (...roles) => (req, res, next) => {
