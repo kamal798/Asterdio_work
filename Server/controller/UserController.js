@@ -34,11 +34,12 @@ module.exports.login = async(req, res) => {
   if (!user)
     return res.status(404).json({status: false, msg: 'invalid email' });
   const valid = await user.comparePassword(password);
-  console.log(valid)
   if (!valid)
     return res.status(400).json({ status: false, msg: 'Invalid Password' });
   
   const token = user.getAccessToken();
+  const role = user.role;
+  const userId = user.id;
 
   const options = {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
@@ -48,7 +49,7 @@ module.exports.login = async(req, res) => {
  
   return res
     .cookie('token', token, options)
-    .json({ status: true, msg: 'Login successfull :)', token });
+    .json({ status: true, msg: 'Login successfull :)', token, role, userId });
 
 }
 
@@ -113,6 +114,25 @@ module.exports.updateUser = async(req,res) => {
   await user.save();
   return res.json({status:true, msg: "User updated successfully", user});
 }
+
+
+// TO LOGOUT USER
+module.exports.logoutUser = async(req,res) => {
+  try{
+    console.log(req.token);
+    console.log(req.user);
+    res.clearCookie("jwt");
+    console.log("logout successfull")
+    await req.user.save();
+    console.log(req.user);
+    console.log(req.token);
+  }catch (error){
+    return res.status(500).json({status: false, msg: "Failed"});
+
+  }
+ 
+}
+
 
 // TO REGISTER THE NEW USER
 module.exports.registerUser = async(req, res) => {

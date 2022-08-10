@@ -7,7 +7,7 @@ const User = require('../models/userSchema');
 module.exports.getAll = async(req,res) => {
     const tasks = await Task.find();
     if(tasks.length > 0)
-        return res.json({status: true, tasks});
+        return res.json({status: true, tasks,});
     return res.json({status: false, msg: "NO TASK FOUND"});
 }
 
@@ -42,17 +42,29 @@ module.exports.addNew = async(req,res) => {
 };
 
 module.exports.ListAssignedTask = async(req,res) => {
-    const userId = req.params.id;
+    const user = await User.findOne({name: req.body.name})
+    if(!user)
+        return res.status(403).json({status: false, msg:"No user found"})
+    const userId = user.id;
     const task = await Task.find();
-    let array = Array.from(task)
+    let array = Array.from(task);
+    let results = [];
     const AssignedTasks = array.map(function(task){
         if(task.user == userId)
         {
             return task;
         }
     })
-    return res.status(200).json({status: true, msg: "Get Successful", AssignedTasks});
+    AssignedTasks.forEach(element => {
+        if (element != null) {
+          results.push(element);
+        }
+      });
+      if(results.length <= 0)
+        return res.status(300).json({status: false, msg: "No assigned task"})
+    return res.status(200).json({status: true, msg: "Get Successful", results});
 }
+
 
 
 
