@@ -38,9 +38,14 @@ module.exports.login = async(req, res) => {
     return res.status(400).json({ status: false, msg: 'Invalid Password' });
   
   const token = user.getAccessToken();
+// <<<<<<< HEAD
   const role = user.role
   const userID = user._id
 
+// =======
+//   const role = user.role;
+//   const userId = user.id;
+// >>>>>>> a2efdbb8c9abcb6b14282a4d8fb50888cbcc9747
 
   const options = {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
@@ -50,9 +55,13 @@ module.exports.login = async(req, res) => {
  
   return res
     .cookie('token', token, options)
+// <<<<<<< HEAD
 
     .json({ status: true, msg: 'Login successfull :)', token, role, userID });
 
+// =======
+//     .json({ status: true, msg: 'Login successfull :)', token, role, userId });
+// >>>>>>> a2efdbb8c9abcb6b14282a4d8fb50888cbcc9747
 
 }
 

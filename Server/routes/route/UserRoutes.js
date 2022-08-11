@@ -22,10 +22,9 @@ router.post('/login', login);
 router.post('/register', registerUser);
 
 //TO DELETE THE USER BY USER_ID
+// <<<<<<< HEAD
 
 router.delete('/delete/:id', authentication, deleteUser);
-
-
 
 
 //TO UPDATE BY USER_ID

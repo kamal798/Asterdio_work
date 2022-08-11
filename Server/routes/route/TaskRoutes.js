@@ -24,7 +24,7 @@ router.delete('/delete/:id',authentication, authorization('admin'), deleteTask);
 router.put("/update/:id",authentication, updateTask);
 
 //TO GET ASSIGNED TASK
-router.get("/assignedtask/tasks",authentication, ListAssignedTask);
+router.get("/assignedtask/tasks/:id",authentication, ListAssignedTask);
 
 
 
