@@ -13,6 +13,8 @@ const corsOptions ={
 
 const userRoutes = require("./routes/route/UserRoutes");
 const taskRoutes = require("./routes/route/TaskRoutes");
+const eventRoutes = require("./routes/route/EventRoute");
+
 
 const cookieParser = require('cookie-parser');
 //console.log(new mongoose.Types.ObjectId())
@@ -32,6 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 //ROUTING
 app.use('/user', userRoutes)
 app.use('/task', taskRoutes);
+app.use('/event',eventRoutes);
 
 app.listen(PORT, () => {
     console.log('server is starting on port number %d', PORT);

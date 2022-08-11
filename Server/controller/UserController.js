@@ -117,21 +117,21 @@ module.exports.updateUser = async(req,res) => {
 
 
 // TO LOGOUT USER
-module.exports.logoutUser = async(req,res) => {
-  try{
-    console.log(req.token);
-    console.log(req.user);
-    res.clearCookie("jwt");
-    console.log("logout successfull")
-    await req.user.save();
-    console.log(req.user);
-    console.log(req.token);
-  }catch (error){
-    return res.status(500).json({status: false, msg: "Failed"});
+// module.exports.logoutUser = async(req,res) => {
+//   try{
+//     console.log(req.token);
+//     console.log(req.user);
+//     res.clearCookie("jwt");
+//     console.log("logout successfull")
+//     await req.user.save();
+//     console.log(req.user);
+//     console.log(req.token);
+//   }catch (error){
+//     return res.status(500).json({status: false, msg: "Failed"});
 
-  }
+//   }
  
-}
+// }
 
 
 // TO REGISTER THE NEW USER
