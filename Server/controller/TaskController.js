@@ -42,7 +42,7 @@ module.exports.addNew = async(req,res) => {
 };
 
 module.exports.ListAssignedTask = async(req,res) => {
-    const user = await User.findOne({name: req.body.name})
+    const user = await User.findById(req.params.id)
     if(!user)
         return res.status(403).json({status: false, msg:"No user found"})
     const userId = user.id;
