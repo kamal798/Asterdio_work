@@ -27,6 +27,35 @@ module.exports.addNew = async(req,res) =>{
     return res.json({status: true, msg: "Event Created Successfully"});
 }
 
+module.exports.deleteEvent = async(req,res) =>{
+    try{
+        const event = await Event.findByIdAndDelete(req.params.id);
+        if(!event){
+            return res.status(404).json({status: false, msg:"No event found"});
+        }
+        return res.json({status: false, msg: "Event deleted successfully"})
+    }catch(error){
+        return res.json({status: false, msg: "Error"})
+    }
+}
+
+module.exports.getOne = async(req,res) => {
+    const event = await Event.findById(req.params.id);
+    if(!event)
+        return res.status(404).json({status: false, msg: "No such event found"});
+    return res.json({status: true, event});
+}
+
+module.exports.updateEvent = async(req,res) => {
+    const event = await Event.findById(req.params.id)
+    if(event){
+        event.set(req.body);
+        await event.save();
+        return res.json({status: true, msg: "Event updated successfully", event});
+    }
+    return res.status(403).json({status: false, msg:"No Event found"});
+}
+
 
 
 
