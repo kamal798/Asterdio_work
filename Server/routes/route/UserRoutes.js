@@ -5,7 +5,7 @@ const {authentication, authorization} = require('../../middleware/auth');
 
 
 
-const {getAll, registerUser, getOne, deleteUser, updateUser, login, forgotPassword, logoutUser } = require('../../controller/UserController')
+const {getAll, registerUser, getOne, deleteUser, updateUser, login, changePassword } = require('../../controller/UserController')
 
 // TO GET ALL USERS
 router.get('/users', authentication,  getAll);
@@ -22,13 +22,16 @@ router.post('/login', login);
 router.post('/register', registerUser);
 
 //TO DELETE THE USER BY USER_ID
+// <<<<<<< HEAD
+
 router.delete('/delete/:id', authentication, deleteUser);
+
 
 //TO UPDATE BY USER_ID
 router.put('/:id', authentication,updateUser );
 
 // TO HANDLE FORGOT PASSWORD
-router.post('/forgot-password', forgotPassword);
+router.put('/user/changepassword', changePassword);
 
 
 

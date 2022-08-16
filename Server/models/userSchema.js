@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
         //AGE
     mobile:{
             type: Number,
-            required:[true, "Please enter the age"]
+            required:[true, "Please enter the mobile"]
         },
   
         //PHONE NUMBER
@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema({
             required:[true,"Please add the phone number"],
           //  unique: [true, "Add the new number that is not mentioned preciously"]
         },
+
+    status:{
+      type: String,
+      enum:["Active","Inactive"]
+    },
 
     role: {
             type: String,

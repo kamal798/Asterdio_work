@@ -40,10 +40,10 @@ module.exports.deleteEvent = async(req,res) =>{
 }
 
 module.exports.getOne = async(req,res) => {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(req.params.id)
     if(!event)
         return res.status(404).json({status: false, msg: "No such event found"});
-    return res.json({status: true, event});
+    return res.json({status: true, event})
 }
 
 module.exports.updateEvent = async(req,res) => {

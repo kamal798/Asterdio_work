@@ -40,7 +40,6 @@ module.exports.login = async(req, res) => {
   const token = user.getAccessToken();
   const role = user.role;
   const userId = user.id;
-  user.status = "Active"
 
   const options = {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
@@ -69,21 +68,25 @@ module.exports.changePassword = async (req, res) => {
     if (!user)
       return res.status(404).json({ status: false, msg: `${req.body.email} email not found :(` });
 
-    const message = "You have successfully changed your password.";
+    const resetToken = await user.getPasswordResetToken();
+
+    // SEND MAIL
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`;
+    const message = `You are receiving this email because you or someone else has requested the reset
+                      of a password. Please make a PUT request to \n\n ${resetUrl}
+                    `;
     try {
       await sendMail({
         email: user.email,
         subject: 'Password Changed',
         message
       });
+      user.set(req.body);
       await user.save();
       return res.json({ status: true, msg: 'Please check your email :)' });
     }
     catch (error) {
       console.log(error);
-      // user.resetPasswordToken = undefined;
-      // user.resetPasswordExpire = undefined;
-      // await user.save({ validateBeforeSave: false });
       return res.status(500).json({ status: false, msg: 'Email could not be sent :(' });
     }
   }
@@ -109,24 +112,6 @@ module.exports.updateUser = async(req,res) => {
   await user.save();
   return res.json({status:true, msg: "User updated successfully", user});
 }
-
-
-// TO LOGOUT USER
-// module.exports.logoutUser = async(req,res) => {
-//   try{
-//     console.log(req.token);
-//     console.log(req.user);
-//     res.clearCookie("jwt");
-//     console.log("logout successfull")
-//     await req.user.save();
-//     console.log(req.user);
-//     console.log(req.token);
-//   }catch (error){
-//     return res.status(500).json({status: false, msg: "Failed"});
-
-//   }
- 
-// }
 
 
 // TO REGISTER THE NEW USER
@@ -175,31 +160,3 @@ module.exports.registerUser = async(req, res) => {
   
     return schema.validate(datas);
   };
-
-/*
-module.exports.registerUser = async(req,res)=>{
-    console.log(req.body);
-    const {name, email,password, age, role, number} = req.body;
-
-    if(!name || !email || !password || !age || !role || !number){
-        res.status(404).send("Please fill the complete data");
-    }
-    try{
-        const preuser = await User.findOne({email:email});
-        console.log(preuser);
-        if(preuser){
-            res.status(404).send("This user is already added.")
-        }else{
-            const adduser = new User({
-                name, email, password, age, role, number
-            });
-
-            await adduser.save();
-            res.status(201).json(adduser);
-            console.log(adduser);
-        }
-    }catch(error){
-        res.status(404).send(error);
-    }
-}
-*/

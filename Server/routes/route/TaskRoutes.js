@@ -9,7 +9,7 @@ const {authentication, authorization} = require('../../middleware/auth');
 const {getAll, getOne, addNew, deleteTask, updateTask, ListAssignedTask} = require('../../controller/TaskController');
 
 // TO GET ALL TASKS
-router.get('/tasks',authentication, getAll);
+router.get('/tasks',authentication, getAll)
 
 //TO GET TASK BY ID
 router.get('/:id',authentication, getOne);
@@ -24,7 +24,7 @@ router.delete('/delete/:id',authentication, authorization('admin'), deleteTask);
 router.put("/update/:id",authentication, updateTask);
 
 //TO GET ASSIGNED TASK
-router.get("/assignedtask/tasks",authentication, ListAssignedTask);
+router.get("/assignedtask/tasks/:id",authentication, ListAssignedTask);
 
 
 
