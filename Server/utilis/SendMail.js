@@ -1,4 +1,4 @@
-/*
+
 const nodemailer = require("nodemailer");
 
 const sendMail = async options => {
@@ -24,28 +24,3 @@ const sendMail = async options => {
 }
 
 module.exports = sendMail;
-*/
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-  service: "hotmail",
-  auth: {
-    user: "kamal.pandit772@outlook.com",
-    pass: "6WJYcxLjYR@:r$L"
-  }
-})
-
-const options = {
-  from: "kamal.pandit772@outlook.com",
-  to: "kamalnature772@gmail.com",
-  subject: "Forgot password",
-  text: "Hi bro"
-};
-
-transporter.sendMail(options, function(err, info){
-  if(err){
-    console.log(err)
-    return;
-  }
-  console.log("sent" + info.response);
-})

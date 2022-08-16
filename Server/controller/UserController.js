@@ -72,9 +72,7 @@ module.exports.changePassword = async (req, res) => {
 
     // SEND MAIL
     const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`;
-    const message = `You are receiving this email because you or someone else has requested the reset
-                      of a password. Please make a PUT request to \n\n ${resetUrl}
-                    `;
+    const message = "Your password is chaged recently. Please contact the department to retrieve the password to access your data";
     try {
       await sendMail({
         email: user.email,
