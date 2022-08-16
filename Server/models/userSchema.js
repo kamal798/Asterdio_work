@@ -48,6 +48,11 @@ const userSchema = new mongoose.Schema({
             type: String,
             enum: ["Frontend Developer", "Backend Developer", "Designer", "QA", "Project Manager"]
           },
+    status: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      default: "Inactive"
+    },
     token: {
             type: String
     }

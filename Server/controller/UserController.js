@@ -40,6 +40,7 @@ module.exports.login = async(req, res) => {
   const token = user.getAccessToken();
   const role = user.role;
   const userId = user.id;
+  user.status = "Active"
 
   const options = {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
@@ -62,23 +63,17 @@ module.exports.deleteUser = async(req,res)=>{
 }
  
 // FORGOT PASSWORD
-module.exports.forgotPassword = async (req, res) => {
+module.exports.changePassword = async (req, res) => {
   if (req.body && req.body.email) {
     const user = await User.findOne({ email: req.body.email });
     if (!user)
       return res.status(404).json({ status: false, msg: `${req.body.email} email not found :(` });
 
-    const resetToken = await user.getPasswordResetToken();
-
-    // SEND MAIL
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`;
-    const message = `You are receiving this email because you or someone else has requested the reset
-                      of a password. Please make a PUT request to \n\n ${resetUrl}
-                    `;
+    const message = "You have successfully changed your password.";
     try {
       await sendMail({
         email: user.email,
-        subject: 'Password reset token',
+        subject: 'Password Changed',
         message
       });
       await user.save();
@@ -155,7 +150,7 @@ module.exports.registerUser = async(req, res) => {
         "password",
         "mobile",
         "phone",
-        "role"
+        "role",
       ])
     );
     user.token = user.getAccessToken();
@@ -174,7 +169,7 @@ module.exports.registerUser = async(req, res) => {
       password: Joi.string().required(),
       mobile: Joi.number().required(),
       phone: Joi.number().required(),
-      role: Joi.string().required()
+      role: Joi.string().required(),
     });
   
   
