@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const _ = require('lodash');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 
 const User = require('../models/userSchema')
@@ -68,10 +69,7 @@ module.exports.changePassword = async (req, res) => {
     if (!user)
       return res.status(404).json({ status: false, msg: `${req.body.email} email not found :(` });
 
-    const resetToken = await user.getPasswordResetToken();
-
     // SEND MAIL
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`;
     const message = "Your password is chaged recently. Please contact the department to retrieve the password to access your data";
     try {
       await sendMail({
@@ -112,7 +110,7 @@ module.exports.updateUser = async(req,res) => {
 }
 
 
-// TO REGISTER THE NEW USER
+// TO REGISTER THE NEW USER AFTER EMAIL VERIFICATION
 module.exports.registerUser = async(req, res) => {
   // try{
   console.log(req.body);
@@ -126,23 +124,63 @@ module.exports.registerUser = async(req, res) => {
       return res.status(400).json({ status: false, msg: error });
     }
     
-    const user = await User.create(
-      _.pick(req.body, [
-        "name",
-        "email",
-        "password",
-        "mobile",
-        "phone",
-        "role",
-      ])
-    );
-    user.token = user.getAccessToken();
-    return res.json({ status: true, msg: "New user created successfully", user });
+    const token = jwt.sign({name, email, phone, mobile, role}, process.env.PRIVATE_KEY, {expiresIn: '20m'});
+    try {
+      await sendMail({
+        email: req.body.email,
+        subject: 'Email verification',
+        html:`
+              <h2>Please click the link to activate the account</h2>
+              <p>${process.env.client_URL}/authetication/activate/${token}</p>
+              `
+      });
+    }catch (error) {
+      console.log(error);
+      return res.status(500).json({ status: false, msg: 'Email could not be sent :(' });
+    }
+
+
+
+    // const user = await User.create(
+    //   _.pick(req.body, [
+    //     "name",
+    //     "email",
+    //     "password",
+    //     "mobile",
+    //     "phone",
+    //     "role",
+    //   ])
+    // );
+    // user.token = user.getAccessToken();
+    // return res.json({ status: true, msg: "New user created successfully", user });
     // }
     // catch(error){
     // res.status(400).json({ status: false, msg: error });
     // }*/
   };
+
+  module.exports.activateAccount = (req,res) => {
+    const {token} = req.body;
+    if(token){
+      jwt.verify(token, process.env.PRIVATE_KEY, function(err, decodedToken){
+        if(err){
+          return res.status(404).json({status: false, msg: "Invalid token"})
+        }
+        const userData = decodedToken;
+        userData.save((err, success) => {
+          if(err){
+            return res.status(404).json({error: err})
+          }
+          res.json({
+            message: "User registered successfully."
+          })
+        })
+      })
+
+    }else{
+      return res.json({status:false, msg: "please enter the token"})
+    }
+  }
 
 
   const userDataValidation = (datas) => {

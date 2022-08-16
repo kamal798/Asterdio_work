@@ -5,7 +5,7 @@ const {authentication, authorization} = require('../../middleware/auth');
 
 
 
-const {getAll, registerUser, getOne, deleteUser, updateUser, login, changePassword } = require('../../controller/UserController')
+const {getAll, registerUser, getOne, deleteUser, updateUser, login, changePassword, activateAccount } = require('../../controller/UserController')
 
 // TO GET ALL USERS
 router.get('/users', authentication,  getAll);
@@ -33,6 +33,6 @@ router.put('/:id', authentication,updateUser );
 // TO HANDLE FORGOT PASSWORD
 router.put('/user/changepassword', changePassword);
 
-
+router.post('/activate', activateAccount)
 
 module.exports = router;
