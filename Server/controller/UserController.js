@@ -88,7 +88,7 @@ module.exports.changePassword = async (req, res) => {
         subject: 'Password Changed',
         message
       });
-      user.set(req.body.password);
+      user.set(req.body);
       await user.save();
       return res.json({ status: true, msg: 'Please check your email :)' });
     }
