@@ -74,33 +74,26 @@ module.exports.deleteUser = async(req,res)=>{
 }
  
 // FORGOT PASSWORD
-module.exports.forgotPassword = async (req, res) => {
+module.exports.changePassword = async (req, res) => {
   if (req.body && req.body.email) {
     const user = await User.findOne({ email: req.body.email });
     if (!user)
       return res.status(404).json({ status: false, msg: `${req.body.email} email not found :(` });
 
-    const resetToken = await user.getPasswordResetToken();
-
     // SEND MAIL
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`;
-    const message = `You are receiving this email because you or someone else has requested the reset
-                      of a password. Please make a PUT request to \n\n ${resetUrl}
-                    `;
+    const message = "Your password is changed. Please contact the department to retrieve the password";
     try {
       await sendMail({
         email: user.email,
-        subject: 'Password reset token',
+        subject: 'Password Changed',
         message
       });
+      user.set(req.body.password);
       await user.save();
       return res.json({ status: true, msg: 'Please check your email :)' });
     }
     catch (error) {
       console.log(error);
-      // user.resetPasswordToken = undefined;
-      // user.resetPasswordExpire = undefined;
-      // await user.save({ validateBeforeSave: false });
       return res.status(500).json({ status: false, msg: 'Email could not be sent :(' });
     }
   }
