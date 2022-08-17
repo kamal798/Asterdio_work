@@ -65,12 +65,15 @@ module.exports.deleteUser = async(req,res)=>{
 // FORGOT PASSWORD
 module.exports.changePassword = async (req, res) => {
   if (req.body && req.body.email) {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }).select('+password');
     if (!user)
-      return res.status(404).json({ status: false, msg: `${req.body.email} email not found :(` });
+      return res.status(404).json({ status: false, msg: `${req.body.email} email not found :(` })
 
-    // SEND MAIL
+    const valid = await user.comparePassword(req.body.password);
     const message = "Your password is chaged recently. Please contact the department to retrieve the password to access your data";
+    if(valid){
+      return res.status(305).json({status: false, msg: "You have entered the same password"})
+    }
     try {
       await sendMail({
         email: user.email,
@@ -86,7 +89,7 @@ module.exports.changePassword = async (req, res) => {
       return res.status(500).json({ status: false, msg: 'Email could not be sent :(' });
     }
   }
-  return res.status(400).json({ status: false, msg: 'Please send your email' });
+
 }
 
 

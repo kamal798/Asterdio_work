@@ -14,6 +14,7 @@ const corsOptions ={
 const userRoutes = require("./routes/route/UserRoutes");
 const taskRoutes = require("./routes/route/TaskRoutes");
 const eventRoutes = require("./routes/route/EventRoute");
+const timerRoutes = require('./routes/route/TimerRoute');
 
 
 const cookieParser = require('cookie-parser');
@@ -32,10 +33,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //ROUTING
-app.use('/user', userRoutes)
+app.use('/user', userRoutes);
 app.use('/task', taskRoutes);
 app.use('/event',eventRoutes);
-
+app.use('/timer',timerRoutes);
 app.listen(PORT, () => {
     console.log('server is starting on port number %d', PORT);
 });
