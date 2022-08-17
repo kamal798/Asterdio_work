@@ -12,7 +12,7 @@ router.get('/events', getAll);
 
 router.post('/addevent', addNew);
 
-router.delete('/:id', deleteEvent);
+router.delete('/delete/:id', deleteEvent);
 
 router.get('/event/:id', getOne);
 

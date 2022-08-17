@@ -5,7 +5,10 @@ const Task = require('../models/taskSchema');
 const User = require('../models/userSchema');
 
 module.exports.getAll = async(req,res) => {
-    const tasks = await Task.find();
+
+    const tasks = await Task.find({})
+    .select('-__v')
+    .populate('user','name', User);
     if(tasks.length > 0)
         return res.json({status: true, tasks});
     return res.json({status: false, msg: "NO TASK FOUND"});
@@ -42,24 +45,22 @@ module.exports.addNew = async(req,res) => {
 };
 
 module.exports.ListAssignedTask = async(req,res) => {
-// <<<<<<< HEAD
-// <<<<<<< HEAD
+
     const user = await User.findById(req.params.id)
 
-// =======
-//     const user = await User.findOne({name: req.body.name})
-// >>>>>>> a2efdbb8c9abcb6b14282a4d8fb50888cbcc9747
-// =======
-//     const user = await User.findById(req.params.id)
-// >>>>>>> 40186b99093b9125a46ed0c394e610a921ce27fb
+
     if(!user)
         return res.status(403).json({status: false, msg:"No user found"})
-    const userId = user.id;
-    const task = await Task.find();
+
+    const userId = user._id;
+    const task = await Task.find({})
+    .select('-__v')
+    .populate('user','name', User);
     let array = Array.from(task);
     let results = [];
     const AssignedTasks = array.map(function(task){
-        if(task.user == userId)
+
+        if(task.user.id == userId)
         {
             return task;
         }
