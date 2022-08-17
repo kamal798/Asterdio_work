@@ -13,7 +13,8 @@ const timerSchema = new mongoose.Schema({
     },
     startTime:{
         type: String,
-        required: [true, "Please mention the start time"]
+        required: [true, "Please mention the start time"],
+        default: Date.now()
     },
     breakTime:{
         type: String,
