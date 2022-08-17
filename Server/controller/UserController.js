@@ -195,8 +195,8 @@ module.exports.registerUser = async(req, res) => {
       name: Joi.string().required(),
       email: Joi.string().required(),
       password: Joi.string().required(),
-      mobile: Joi.number().required(),
-      phone: Joi.number().required(),
+      mobile: Joi.string().regex(/^(98)[0-9]{8}$/).messages({'string.pattern.base': `Mobile number must have 10 digits and start with 98.`}).required(),
+      phone: Joi.string().regex(/^(01)[0-9]{5}$/).messages({'string.pattern.base': `Phone number must have 7 digits and start with 01.`}).required(),
       role: Joi.string().required(),
     });
   

@@ -3,8 +3,6 @@ const router = express.Router();
 const {authentication, authorization} = require('../../middleware/auth');
 
 
-
-
 const {getAll, getOne, addNew} = require('../../controller/TimeController');
 
 

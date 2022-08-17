@@ -30,9 +30,8 @@ module.exports.addNew = async(req,res) => {
             "user",
             "task",
             "startTime",
-            "breakTime",
-            "endBreak",
-            "endTime"
+            "endTime",
+            "duration"
         ]);
     const userID = data.user;
     const taskID = data.task;

@@ -44,38 +44,13 @@ module.exports.addNew = async(req,res) => {
 };
 
 module.exports.ListAssignedTask = async(req,res) => {
-// <<<<<<< HEAD
-// <<<<<<< HEAD
     const user = await User.findById(req.params.id)
-
-// =======
-//     const user = await User.findOne({name: req.body.name})
-// >>>>>>> a2efdbb8c9abcb6b14282a4d8fb50888cbcc9747
-// =======
-//     const user = await User.findById(req.params.id)
-// >>>>>>> 40186b99093b9125a46ed0c394e610a921ce27fb
     if(!user)
         return res.status(403).json({status: false, msg:"No user found"})
-    const userId = user._id;
-    const task = await Task.find({})
-    .select('-__v')
-    .populate('user','name', User);
-    let array = Array.from(task);
-    let results = [];
-    const AssignedTasks = array.map(function(task){
-        if(task.user.id == userId)
-        {
-            return task;
-        }
-    })
-    AssignedTasks.forEach(element => {
-        if (element != null) {
-          results.push(element);
-        }
-      });
-      if(results.length <= 0)
+    const assignedTasks = await Task.find({user: user._id})    .populate('user','name', User);    
+      if(assignedTasks.length <= 0)
         return res.status(300).json({status: false, msg: "No assigned task"})
-    return res.status(200).json({status: true, msg: "Get Successful", results});
+    return res.status(200).json({status: true, msg: "Get Successful", assignedTasks});
 }
 
 
@@ -99,20 +74,6 @@ module.exports.updateTask = async(req,res) => {
         }
     return res.status(404).json({status: false, msg: "No task found"});
 }
-
-// module.exports.updateTaskstatus = async(req,res) => {
-//     const task = await Task.findById(req.params.id);
-//     if(task){
-//         if(task.task_status == "ongoing")
-//         {
-//             task.task_start_date = Date();
-//         }
-//         if(task.task_status == "completed")
-//         {
-//             task.task_end_date = Date();
-//         }
-//     }
-// }
 
 
 const taskDataValidation = (datas) => {

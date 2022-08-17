@@ -10,23 +10,6 @@ const timerSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'task',
         required: [true, 'Task is required :(']
-    },
-    startTime:{
-        type: String,
-        required: [true, "Please mention the start time"],
-        default: Date.now()
-    },
-    breakTime:{
-        type: String,
-        default: null
-    },
-    endBreak:{
-        type: String,
-        default: null
-    },
-    endTime:{
-        type: String,
-        default: null
     }
 }, 
 {timestamps: true}
