@@ -3,13 +3,6 @@ const express = require("express");
 const app =  express();
 require("./db/conn");
 const cors = require("cors");
-//
-const corsOptions ={
-    origin:'http://localhost:3000', 
-    credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
-}
-//
 
 const userRoutes = require("./routes/route/UserRoutes");
 const taskRoutes = require("./routes/route/TaskRoutes");
@@ -24,9 +17,12 @@ const cookieParser = require('cookie-parser');
 
 const PORT = 3500;
 
-app.use(cors(corsOptions));
-
-// app.use(cors());
+app.use(
+    cors({
+    origin: "http://192.168.0.130:3000",
+    credentials: true
+})
+);
 
 // FOR PARSING THE REQUEST DATA
 app.use(express.json());
@@ -37,6 +33,6 @@ app.use('/user', userRoutes);
 app.use('/task', taskRoutes);
 app.use('/event',eventRoutes);
 app.use('/timer',timerRoutes);
-app.listen(PORT, "192.168.0.130",  () => {
+app.listen(PORT, () => {
     console.log('server is starting on port number %d', PORT);
 });
