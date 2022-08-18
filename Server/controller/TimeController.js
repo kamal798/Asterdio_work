@@ -31,7 +31,6 @@ module.exports.addNew = async(req,res) => {
             "task",
             "startTime",
             "endTime",
-            "duration"
         ]);
     const userID = data.user;
     const taskID = data.task;
@@ -45,11 +44,22 @@ module.exports.addNew = async(req,res) => {
     
 };
 
+module.exports.updateStatus = async(req,res) => {
+    const timer = await Timer.findById(req.params.id);
+    if(timer){
+        timer.set(req.body);
+        await timer.save();
+        return res.json({status: true, timer});
+
+    }
+    return res.status(300).json({status: false, msg: "Timer not found"});
+}
+
 
 const timerDataValidation = (datas) => {
     const schema = Joi.object({
-        user: Joi.string().required(),
-        task: Joi.string().required(),
+        user: Joi.string(),
+        task: Joi.string(),
         startTime: Joi.date(),
         endTime: Joi.date().greater(Joi.ref('startTime'))
     });

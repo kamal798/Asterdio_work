@@ -10,6 +10,12 @@ const timerSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'task',
         required: [true, 'Task is required :(']
+    },
+    startTime: {
+        type: String
+    },
+    endTime: {
+        type: String
     }
 }, 
 {timestamps: true}
