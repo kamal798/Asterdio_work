@@ -38,15 +38,16 @@ const userSchema = new mongoose.Schema({
         },
   
         //PHONE NUMBER
-    phone:{
-            type: Number,
-            required:[true,"Please add the phone number"],
+    address:{
+            type: String,
+            required:[true,"Please add address"],
           //  unique: [true, "Add the new number that is not mentioned preciously"]
         },
 
     status:{
       type: String,
-      enum:["Active","Inactive"]
+      enum:["Active","Inactive"],
+      default: 'Inactive'
     },
 
     role: {

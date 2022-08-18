@@ -166,7 +166,7 @@ module.exports.registerUser = async(req, res) => {
         "email",
         "password",
         "mobile",
-        "phone",
+        "address",
         "role"
       ])
     );
@@ -185,7 +185,7 @@ module.exports.registerUser = async(req, res) => {
       email: Joi.string().required(),
       password: Joi.string().required(),
       mobile: Joi.number().required(),
-      phone: Joi.number().required(),
+      address: Joi.string().required(),
       role: Joi.string().required()
     });
   

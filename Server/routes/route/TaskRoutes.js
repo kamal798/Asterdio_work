@@ -18,7 +18,7 @@ router.get('/:id',authentication, getOne);
 router.post('/addtask',authentication, addNew);
 
 //TO DELETE TASKS
-router.delete('/delete/:id',authentication, authorization('admin'), deleteTask);
+router.delete('/delete/:id',authentication, authorization('Project Manager'), deleteTask);
 
 //TO UPDATE TASKS
 router.put("/update/:id",authentication, updateTask);
