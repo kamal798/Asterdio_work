@@ -147,8 +147,9 @@ module.exports.registerUser = async(req, res) => {
       // return res.status(400).json({ status: false , msg: error.message });
       return res.status(400).json({ status: false, msg: error });
     }
+    const {name, email, phone, mobile, role, status} = req.body;
     
-    const token = jwt.sign({name, email, phone, mobile, role}, process.env.PRIVATE_KEY, {expiresIn: '20m'});
+    const token = jwt.sign({name, email, phone, mobile, role, status}, process.env.PRIVATE_KEY, {expiresIn: '20m'});
     try {
       await sendMail({
         email: req.body.email,
@@ -186,7 +187,7 @@ module.exports.registerUser = async(req, res) => {
   module.exports.activateAccount = (req,res) => {
     const {token} = req.body;
     if(token){
-      jwt.verify(token, process.env.PRIVATE_KEY, function(err, decodedToken){
+      jwt.verify(token, process.env.PRIVATE_KEY, (err, decodedToken) => {
         if(err){
           return res.status(404).json({status: false, msg: "Invalid token"})
         }
