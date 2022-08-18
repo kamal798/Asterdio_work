@@ -37,6 +37,6 @@ app.use('/user', userRoutes);
 app.use('/task', taskRoutes);
 app.use('/event',eventRoutes);
 app.use('/timer',timerRoutes);
-app.listen(PORT, () => {
+app.listen(PORT, "192.168.0.130",  () => {
     console.log('server is starting on port number %d', PORT);
 });

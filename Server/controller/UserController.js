@@ -149,7 +149,7 @@ module.exports.registerUser = async(req, res) => {
     }
     const {name, email, phone, mobile, role, status} = req.body;
     
-    const token = jwt.sign({name, email, phone, mobile, role, status}, process.env.PRIVATE_KEY, {expiresIn: '20m'});
+    const token = jwt.sign({name, email, phone, mobile, role, status}, process.env.PRIVATE_KEY);
     try {
       await sendMail({
         email: req.body.email,
