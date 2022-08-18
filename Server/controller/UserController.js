@@ -94,6 +94,23 @@ module.exports.changePassword = async (req, res) => {
     }
   }
 
+};
+
+
+
+//TO UPDATE PHOTOS OF USER
+module.exports.updateUserimage = async(req,res) => {
+  if(req.file)
+    req.body.image = req.file.filename;
+
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+  if(!user)
+    return res.status(404).json({status: false, msg: "User not found"});
+
+  return res.json({status : true, msg: "USer photos updated successfully", user});
 }
 
 

@@ -2,10 +2,10 @@ const { response } = require("express");
 const express = require("express");
 const router = express.Router();
 const {authentication, authorization} = require('../../middleware/auth');
+const upload = require('../../utilis/multer');
 
 
-
-const {getAll, registerUser, getOne, deleteUser, updateUser, login, changePassword, activateAccount } = require('../../controller/UserController')
+const {getAll, registerUser, getOne, deleteUser, updateUser, login, changePassword, activateAccount, updateUserimage } = require('../../controller/UserController')
 
 // TO GET ALL USERS
 router.get('/users', authentication,  getAll);
@@ -20,6 +20,9 @@ router.post('/login', login);
 
 //TO ADD NEW USER
 router.post('/register', registerUser);
+
+//TU UPDATE IMAGE OF USER
+router.put('/updateimage/:id', upload.single('image'), updateUserimage)
 
 //TO DELETE THE USER BY USER_ID
 // <<<<<<< HEAD
