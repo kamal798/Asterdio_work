@@ -74,39 +74,44 @@ module.exports.deleteUser = async(req,res)=>{
 }
  
 // FORGOT PASSWORD
-module.exports.forgotPassword = async (req, res) => {
+ 
+// FORGOT PASSWORD
+module.exports.changePassword = async (req, res) => {
   if (req.body && req.body.email) {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }).select('+password');
     if (!user)
-      return res.status(404).json({ status: false, msg: `${req.body.email} email not found :(` });
+      return res.status(404).json({ status: false, msg: `${req.body.email} email not found :(` })
+    if (req.body.newPassword !== req.body.confirmPassword) {
+        return res.status(400).json({status:false,msg:"Password do not match with each other"});
+      }
 
-    const resetToken = await user.getPasswordResetToken();
-
-    // SEND MAIL
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`;
-    const message = `You are receiving this email because you or someone else has requested the reset
-                      of a password. Please make a PUT request to \n\n ${resetUrl}
-                    `;
-    try {
-      await sendMail({
-        email: user.email,
-        subject: 'Password reset token',
-        message
-      });
-      await user.save();
-      return res.json({ status: true, msg: 'Please check your email :)' });
+    const valid = await user.comparePassword(req.body.newPassword);
+    const message = "Your password is changed recently. Please contact the department to retrieve the password to access your data";
+    if(valid){
+      return res.status(305).json({status: false, msg: "You have entered the old password"})
     }
-    catch (error) {
-      console.log(error);
-      // user.resetPasswordToken = undefined;
-      // user.resetPasswordExpire = undefined;
-      // await user.save({ validateBeforeSave: false });
-      return res.status(500).json({ status: false, msg: 'Email could not be sent :(' });
-    }
+    
+    user.password = req.body.newPassword;
+    user.set(req.body);
+    await user.save();
+    return res.json({msg: "password changed"})
+    // try {
+    //   await sendMail({
+    //     email: user.email,
+    //     subject: 'Password Changed',
+    //     message
+    //   });
+    //   user.set(req.body);
+    //   await user.save();
+    //   return res.json({ status: true, msg: 'Please check your email :)' });
+    // }
+    // catch (error) {
+    //   console.log(error);
+    //   return res.status(500).json({ status: false, msg: 'Email could not be sent :(' });
+    // }
   }
-  return res.status(400).json({ status: false, msg: 'Please send your email' });
-}
 
+};
 
 //TO UPDATE USER BY USER_ID
 module.exports.updateUser = async(req,res) => {
@@ -126,6 +131,20 @@ module.exports.updateUser = async(req,res) => {
   await user.save();
   return res.json({status:true, msg: "User updated successfully", user});
 }
+//image
+// module.exports.updateUserimage = async(req,res) => {
+//   if(req.file)
+//     req.body.image = req.file.filename;
+
+//   const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//     runValidators: true
+//   });
+//   if(!user)
+//     return res.status(404).json({status: false, msg: "User not found"});
+
+//   return res.json({status : true, msg: "USer photos updated successfully", user});
+// }
 
 
 // TO LOGOUT USER
@@ -170,12 +189,8 @@ module.exports.registerUser = async(req, res) => {
         "role"
       ])
     );
-    user.token = user.getAccessToken();
     return res.json({ status: true, msg: "New user created successfully", user });
-    // }
-    // catch(error){
-    // res.status(400).json({ status: false, msg: error });
-    // }*/
+   
   };
 
 
@@ -184,7 +199,7 @@ module.exports.registerUser = async(req, res) => {
       name: Joi.string().required(),
       email: Joi.string().required(),
       password: Joi.string().required(),
-      mobile: Joi.number().required(),
+      mobile: Joi.string().regex(/^(98)[0-9]{8}$/).messages({'string.pattern.base': `Mobile number must have 10 digits and start with 98.`}).required(),
       address: Joi.string().required(),
       role: Joi.string().required()
     });

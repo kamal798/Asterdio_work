@@ -37,10 +37,10 @@ const userSchema = new mongoose.Schema({
             required:[true, "Please enter the mobile"]
         },
   
-        //PHONE NUMBER
+        //ADDRESS
     address:{
             type: String,
-            required:[true,"Please add address"],
+            required:[true,"Please add the address"],
           //  unique: [true, "Add the new number that is not mentioned preciously"]
         },
 
