@@ -3,13 +3,8 @@ const express = require("express");
 const router = express.Router();
 const {authentication, authorization} = require('../../middleware/auth');
 
-
-
-<<<<<<< HEAD
-const {getAll, registerUser, getOne, deleteUser, updateUser, login, changePassword, logoutUser } = require('../../controller/UserController')
-=======
 const {getAll, registerUser, getOne, deleteUser, updateUser, login, changePassword } = require('../../controller/UserController')
->>>>>>> d0c0244f89ac2a1ecf1ea64ba7fbe4fa0b23428c
+
 
 // TO GET ALL USERS
 router.get('/users', authentication,  getAll);

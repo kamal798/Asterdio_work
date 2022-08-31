@@ -74,7 +74,7 @@ module.exports.deleteUser = async(req,res)=>{
 }
  
 // FORGOT PASSWORD
-module.exports.forgotPassword = async (req, res) => {
+module.exports.changePassword = async (req, res) => {
   if (req.body && req.body.email) {
     const user = await User.findOne({ email: req.body.email }).select('+password');
     if (!user)
@@ -110,7 +110,7 @@ module.exports.forgotPassword = async (req, res) => {
   return res.status(400).json({ status: false, msg: 'Please send your email' });
 }
 
-};
+
 
 //TO UPDATE USER BY USER_ID
 module.exports.updateUser = async(req,res) => {
