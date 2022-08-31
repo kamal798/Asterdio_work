@@ -74,9 +74,7 @@ module.exports.deleteUser = async(req,res)=>{
 }
  
 // FORGOT PASSWORD
- 
-// FORGOT PASSWORD
-module.exports.changePassword = async (req, res) => {
+module.exports.forgotPassword = async (req, res) => {
   if (req.body && req.body.email) {
     const user = await User.findOne({ email: req.body.email }).select('+password');
     if (!user)
@@ -85,31 +83,32 @@ module.exports.changePassword = async (req, res) => {
         return res.status(400).json({status:false,msg:"Password do not match with each other"});
       }
 
-    const valid = await user.comparePassword(req.body.newPassword);
-    const message = "Your password is changed recently. Please contact the department to retrieve the password to access your data";
-    if(valid){
-      return res.status(305).json({status: false, msg: "You have entered the old password"})
+    const resetToken = await user.getPasswordResetToken();
+
+    // SEND MAIL
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`;
+    const message = `You are receiving this email because you or someone else has requested the reset
+                      of a password. Please make a PUT request to \n\n ${resetUrl}
+                    `;
+    try {
+      await sendMail({
+        email: user.email,
+        subject: 'Password reset token',
+        message
+      });
+      await user.save();
+      return res.json({ status: true, msg: 'Please check your email :)' });
     }
-    
-    user.password = req.body.newPassword;
-    user.set(req.body);
-    await user.save();
-    return res.json({msg: "password changed"})
-    // try {
-    //   await sendMail({
-    //     email: user.email,
-    //     subject: 'Password Changed',
-    //     message
-    //   });
-    //   user.set(req.body);
-    //   await user.save();
-    //   return res.json({ status: true, msg: 'Please check your email :)' });
-    // }
-    // catch (error) {
-    //   console.log(error);
-    //   return res.status(500).json({ status: false, msg: 'Email could not be sent :(' });
-    // }
+    catch (error) {
+      console.log(error);
+      // user.resetPasswordToken = undefined;
+      // user.resetPasswordExpire = undefined;
+      // await user.save({ validateBeforeSave: false });
+      return res.status(500).json({ status: false, msg: 'Email could not be sent :(' });
+    }
   }
+  return res.status(400).json({ status: false, msg: 'Please send your email' });
+}
 
 };
 
